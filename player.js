@@ -11,9 +11,8 @@ exports.Player = function(gameId,playerSocket,username){
 	var _score = 0;
 
 	// States
-	_currentGuess = undefined;
 	_currentFake = undefined;
-	_currentSelection = undefined;
+	_currentGuess = undefined;
 
 	self.getId = function(){
 		return _gameId;
@@ -23,21 +22,20 @@ exports.Player = function(gameId,playerSocket,username){
 		return _username;
 	}
 
-	self.getGuess = function(){
-		// TODO - make sure defined
-		return _currentGuess;
+	self.getScore = function(){
+		return _score;
+	}
+
+	self.getDrawing = function(){
+		return _drawing;
 	}
 
 	self.getFake = function(){
 		return _currentFake;
 	}
 
-	self.getSelection = function(){
-		return _currentSelection;
-	}
-
-	self.getScore = function(){
-		return _score;
+	self.getGuess = function(){
+		return _currentGuess;
 	}
 
 	self.addPoints = function(points){
@@ -48,20 +46,16 @@ exports.Player = function(gameId,playerSocket,username){
 		_socket.emit('drawing-word', { word : word });
 	}
 
-	self.getDrawing = function(){
-		return _drawing;
+	self.waitForFakes = function(){
+		_socket.emit('wait-for-fakes', {});
 	}
 
-	self.waitForGuesses = function(){
-		_socket.emit('wait-for-guesses', {});
+	self.startFakeStage = function(){
+		_socket.emit('start-fake-stage', {});
 	}
 
-	self.startGuessing = function(){
-		_socket.emit('start-guessing', {});
-	}
-
-	self.makeFakesAndSelections = function(options){
-		_socket.emit('prompt-fake-and-selection', { options : options });
+	self.startGuessStage = function(options){
+		_socket.emit('start-guess-stage', { options : options });
 	}
 
 	self.showResult = function(){
@@ -73,16 +67,12 @@ exports.Player = function(gameId,playerSocket,username){
 		_socket.emit('drawing-stored', {});
 	});
 
-	_socket.on('submit-guess', function(data){
-		_currentGuess = data.guess;
-	});
-
 	_socket.on('submit-fake', function(data){
 		_currentFake = data.fake;
 	});
 
-	_socket.on('submit-selection', function(data){
-		_currentSelection = data.selection;
+	_socket.on('submit-guess', function(data){
+		_currentGuess = data.guess;
 	});
 
 	_socket.on('add-points', function(data){
