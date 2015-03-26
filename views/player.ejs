@@ -1,0 +1,18 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/controller/whiteboard.js"></script>
+<script src="/javascripts/controller/ui.controller.js"></script>
+<script src="/javascripts/controller/player.js"></script>
+<script src="/javascripts/controller/main.js"></script>
+<label>Game ID: </label>
+<input type="text" style="text-transform:uppercase" id="game-id-input"/>
+<label>Username: </label>
+<input type="text" id="username-input"/>
+<button id="create-player-btn">Join Game</button>
+<div>Word: </div>
+<div id="drawing-word"></div>
+<canvas id="controller-canvas" width="300" height="300"></canvas>
+<button id="submit-drawing">Submit Drawing</button>
+<label>Fake:</label>
+<input type="text" id="fake-input"/>
+<button id="fake-submit-btn">Submit Fake</button>
+<form id="options"></form>

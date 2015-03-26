@@ -1,9 +1,8 @@
 var crypto = require('crypto');
-var app = require('./app.js');
 
-exports.generateId = function(){
+exports.generateId = function(games){
   var id;
-  while(!id || app.games.hasOwnProperty(id)){
+  while(!id || games.hasOwnProperty(id)){
     id = randomAsciiString(5);
   }
   return id;
