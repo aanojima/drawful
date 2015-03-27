@@ -1,90 +1,75 @@
-function UIController(player){
+function UIController(playerHandlers){
 	var self = {};
 
-	var _socket = socket;
+	var _playerHandlers = playerHandlers;
 
-	var _drawingSubmitted = false;
-	var _fakeSubmitted = false;
-	var _guessSubmitted = false;
-
-	_socket.on("drawing-phrase", function(data){
-		// TODO: clear canvas
-		_drawingSubmitted = false;
-		var phrase = data.phrase;
-		$("#drawing-phrase").text(phrase);
-	});
-
-	$("#submit-drawing").click(function(e){
-		submitDrawing();
-	});
-
-	$("#submit-fake").click(function(e){
-		submitFake();
-	});
-
-	$("#submit-guess").click(function(e){
-		submitGuess();
-	});
-
-	function submitDrawing(){
-		console.log("I am submitting a drawing");
-		if (_drawingSubmitted){
-			return;
+	self.handle = function(event,data){
+		if (_playerEvents.hasOwnProperty(event)){
+			return _playerEvents[event](data);
 		}
-		var canvas = $("#controller-canvas")[0];
-		var imgData = canvas.toDataURL("image/png");
-		_socket.emit("drawing-submitted", { image : imgData });
-		_drawingSubmitted = true;
 	}
 
-	function submitFake(){
-		console.log("I am submitting a fake");
-		if (_fakeSubmitted){
-			return;
-		}
-		var fake = $("#fake-input").val();
-		_socket.emit("submit-fake", { fake : fake });
-		_fakeSubmitted = true;
+	var _playerEvents = {
+		"player-added" : playerAdded,
+		"drawing-phrase" : drawingPhrase,
+		"drawing-time-up" : drawingTimeUp,
+		"drawing-stored" : drawingStored,
+		"start-turn" : startTurn,
+		"wait-for-fakes" : waitForFakes,
+		"start-fake-stage" : startFakeStage,
+		"fake-stage-time-up" : fakeStageTimeUp,
+		"fake-stored" : fakeStored,
+		"start-guess-stage" : startGuessStage,
+		"guess-stage-time-up" : guessStageTimeUp,
+		"guess-stored" : guessStored,		
+		"turn-over" : turnOver,
+		"create-player" : createPlayer,
+		"get-drawing" : getDrawing,
+		"get-fake" : getFake,
+		"get-guess" : getGuess,
 	}
 
-	function submitGuess(){
-		console.log("I am submitting a guess");
-		if (_guessSubmitted){
-			return;
-		}
-		var guess = parseInt(
-			$("#options")
-				.children()
-				.children()
-				.filter("input:checked")
-				.val(),
-			10);
-		_socket.emit("submit-guess", { guess : guess });
-		_guessSubmitted = true;
+	// UI Event Handlers
+	function playerAdded(data){
+		// TODO
 	}
 
-	_socket.on("drawing-stored", function(data){
-		console.log("drawing-stored");
-	});
+	function drawingPhrase(data){
+		// TODO: Display Phrase to User
+		$("#drawing-phrase").text(data.phrase);	
+	}
 
-	_socket.on("drawing-time-up", function(data){
-		console.log("Time's Up!");
-		submitDrawing();
-	});
+	function drawingTimeUp(data){
+		// TODO
+	}
 
-	_socket.on('start-fake-stage', function(data){
-		// New Turn
+	function drawingStored(data){
+		// TODO
+	}
+
+	function startTurn(data){
+		// TODO: Start of Turn: clear options, etc.
 		$("#options").html("");
-		_fakeSubmitted = false;
-	});
+	}
 
-	_socket.on("fake-stage-time-up", function(data){
-		console.log("fake time up");
-		submitFake();
-	});
+	function waitForFakes(data){
+		// TODO
+	}
 
-	_socket.on('start-guess-stage', function(data){
-		_guessSubmitted = false;
+	function startFakeStage(data){
+		// TODO
+	}
+
+	function fakeStageTimeUp(data){
+		// TODO
+	}
+
+	function fakeStored(data){
+		// TODO
+	}
+
+	function startGuessStage(data){
+		// TODO
 		var options = data.options;
 		var optionNumber = data.optionNumber;
 		for (var i in options){
@@ -99,16 +84,60 @@ function UIController(player){
 			var optionDiv = $("<div></div>").append(optionInput).append(optionLabel);
 			$("#options").append(optionDiv);
 		}
-		console.log('start-guess-stage');
-	});
+	}
+	
+	function guessStageTimeUp(data){
+		// TODO
+	}
 
-	_socket.on("guess-stage-time-up", function(data){
-		console.log("guess time up");
-		submitGuess();
-	});
+	function guessStored(data){
+		// TODO
+	}
 
-	_socket.on("turn-over", function(data){
+	function turnOver(data){
+		// TODO
 		$("#options").html("");
+	}
+
+	function getDrawing(data){
+		var canvas = $("#controller-canvas")[0];
+		var imgData = canvas.toDataURL("image/png");
+		return imgData;
+	}
+
+	function getFake(data){
+		return $("#fake-input").val();
+	}
+
+	function getGuess(data){
+		var guess = parseInt(
+			$("#options")
+				.children()
+				.children()
+				.filter("input:checked")
+				.val(),
+			10);
+		return guess;
+	}
+
+	// UI Event Listeners
+	$("#create-player-btn").click(function(e){
+		var gameId = $("#game-id-input").val().toUpperCase();
+		var username = $("#username-input").val();
+		var data = { gameId : gameId, username : username };
+		return _playerHandlers["create-player"](data);
+	});
+
+	$("#submit-drawing").click(function(e){
+		return _playerHandlers["submit-drawing"]();
+	});
+
+	$("#submit-fake").click(function(e){
+		return _playerHandlers["submit-fake"]();
+	});
+
+	$("#submit-guess").click(function(e){
+		return _playerHandlers["submit-guess"]();
 	});
 
 	return self;

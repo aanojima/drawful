@@ -3,5 +3,4 @@ $(document).ready(function(){
 	var whiteboard = Whiteboard(canvas);
 	socket = io();
 	var player = Player(socket);
-	var ui = UIController(player);
 });

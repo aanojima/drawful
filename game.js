@@ -81,6 +81,7 @@ exports.Game = function(gameId,gameSocket,rounds){
 		}
 		_currentPlayer = randomPlayer();
 		_currentImage = _currentPlayer.getDrawing();
+		_socket.to(_gameId).emit('start-turn');
 		_socket.emit('show-drawing', { image : _currentImage });
 		_currentPlayer.waitForFakes();
 		for (var pkey in _players){
