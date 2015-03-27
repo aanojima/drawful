@@ -29,8 +29,6 @@ function Game(socket){
 		console.log(error);
 	});
 
-	_socket.emit('create-game');
-
 	_socket.on("game-started", function(data){
 		console.log(data);
 		_numPlayers = data.numPlayers;
@@ -97,6 +95,8 @@ function Game(socket){
 			_socket.emit("all-guesses-submitted");
 		}
 	});
+
+	_socket.emit('create-game');
 
 	return self;
 }

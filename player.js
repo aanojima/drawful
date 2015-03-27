@@ -42,8 +42,8 @@ exports.Player = function(gameId,playerSocket,username){
 		_score += points;
 	}
 
-	self.sendWord = function(word){
-		_socket.emit('drawing-word', { word : word });
+	self.sendWord = function(phrase){
+		_socket.emit('drawing-phrase', { phrase : phrase });
 	}
 
 	self.waitForFakes = function(){

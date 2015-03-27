@@ -1,8 +1,7 @@
-var wg = require('./word-generator');
+var pg = require('./phrase-generator');
 
 exports.Game = function(gameId,gameSocket,rounds){
-	// TODO
-	// _socket.to(gameId).emit("", {});
+
 	var self = {};
 
 	const _ROUNDS = rounds || 1;
@@ -10,7 +9,7 @@ exports.Game = function(gameId,gameSocket,rounds){
 	var _gameId = gameId;
 	var _socket = gameSocket;
 	var _roundsLeft = rounds || 1;
-	var _words = {};
+	var _phrases = {};
 	var _players = {};
 	var _playersLeft = [];
 
@@ -55,7 +54,6 @@ exports.Game = function(gameId,gameSocket,rounds){
 	}
 
 	function startRound(){
-		console.log(_roundsLeft);
 		if (_roundsLeft <= 0){
 			return gameOver();
 		}
@@ -63,10 +61,10 @@ exports.Game = function(gameId,gameSocket,rounds){
 		_socket.emit('round-started', {});
 		_roundsLeft -= 1;
 		for (pkey in _players){
-			var word = wg.newWord();
+			var phrase = pg.newPhrase();
 			var player = _players[pkey];
-			_words[pkey] = word;
-			player.sendWord(word);
+			_phrases[pkey] = phrase;
+			player.sendPhrase(phrase);
 		}
 		_socket.emit('drawing-started', {});
 	}
@@ -78,7 +76,6 @@ exports.Game = function(gameId,gameSocket,rounds){
 	};
 
 	function startTurn() {
-		console.log("players left: ", _playersLeft.length);
 		if (_playersLeft.length == 0){
 			return startRound();
 		}
@@ -98,7 +95,7 @@ exports.Game = function(gameId,gameSocket,rounds){
 
 	function startGuessing() {
 		var username = _currentPlayer.getName();
-		var answer = _words[username];
+		var answer = _phrases[username];
 		_currentOptions = [];
 		_mapOptionToPlayerName = {};
 		var others = [];
@@ -116,13 +113,11 @@ exports.Game = function(gameId,gameSocket,rounds){
 			_mapOptionToPlayerName[optionNumber] = pkey;
 			mapPlayerNameToOption[pkey] = optionNumber;
 		}
-		console.log("CURRENT OPTIONS: ", _currentOptions);
 		_currentPlayer.waitForGuesses();
 		for (var i in others){
 			var other = others[i];
 			var otherName = other.getName();
 			var optionNumber = mapPlayerNameToOption[otherName];
-			console.log("OPTION NUMBER", otherName, optionNumber);
 			other.startGuessStage(_currentOptions, optionNumber);
 		}
 		_socket.emit('show-options', { options : _currentOptions });
@@ -131,7 +126,7 @@ exports.Game = function(gameId,gameSocket,rounds){
 
 	function updateAndNotifyScores() {
 		var username = _currentPlayer.getName()
-		var answer = _words[username];
+		var answer = _phrases[username];
 		var results = {};
 		var points = {};
 
@@ -150,7 +145,6 @@ exports.Game = function(gameId,gameSocket,rounds){
 			var other = _players[pkey];
 			var guess = other.getGuess();
 			var faker = _mapOptionToPlayerName[guess];
-			console.log(_mapOptionToPlayerName,guess,faker);
 			if (faker == username){
 				points[username] = 1000 + (points[username] || 0);
 				_currentPlayer.addPoints(1000);

@@ -7,17 +7,11 @@ function UIController(player){
 	var _fakeSubmitted = false;
 	var _guessSubmitted = false;
 
-	$("#create-player-btn").click(function(e){
-		var gameId = $("#game-id-input").val().toUpperCase();
-		var username = $("#username-input").val();
-		player.joinGame(gameId,username);
-	});
-
-	_socket.on("drawing-word", function(data){
+	_socket.on("drawing-phrase", function(data){
 		// TODO: clear canvas
 		_drawingSubmitted = false;
-		var word = data.word;
-		$("#drawing-word").text(word);
+		var phrase = data.phrase;
+		$("#drawing-phrase").text(phrase);
 	});
 
 	$("#submit-drawing").click(function(e){

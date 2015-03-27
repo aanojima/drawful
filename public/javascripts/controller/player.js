@@ -4,8 +4,14 @@ function Player(socket){
 	var _socket = socket;
 
 	self.joinGame = function(gameId,username){
-		_socket.emit("add-player", { gameId : gameId, username : username });
+		
 	}
+
+	$("#create-player-btn").click(function(e){
+		var gameId = $("#game-id-input").val().toUpperCase();
+		var username = $("#username-input").val();
+		_socket.emit("add-player", { gameId : gameId, username : username });
+	});
 
 	_socket.on('game-error', function(error){
 		console.log(error);
