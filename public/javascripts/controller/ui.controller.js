@@ -1,7 +1,7 @@
 function UIController(playerHandlers){
 	var self = {};
 
-	var _playerHandlers = playerHandlers;
+	_playerHandlers = playerHandlers;
 
 	self.handle = function(event,data){
 		if (_playerEvents.hasOwnProperty(event)){
@@ -12,7 +12,7 @@ function UIController(playerHandlers){
 	var _playerEvents = {
 		"player-added" : playerAdded,
 		"drawing-phrase" : drawingPhrase,
-		"drawing-time-up" : drawingTimeUp,
+		"draw-stage-time-up" : drawStageTimeUp,
 		"drawing-stored" : drawingStored,
 		"start-turn" : startTurn,
 		"wait-for-fakes" : waitForFakes,
@@ -23,11 +23,10 @@ function UIController(playerHandlers){
 		"guess-stage-time-up" : guessStageTimeUp,
 		"guess-stored" : guessStored,		
 		"turn-over" : turnOver,
-		"create-player" : createPlayer,
 		"get-drawing" : getDrawing,
 		"get-fake" : getFake,
 		"get-guess" : getGuess,
-	}
+	};
 
 	// UI Event Handlers
 	function playerAdded(data){
@@ -39,7 +38,7 @@ function UIController(playerHandlers){
 		$("#drawing-phrase").text(data.phrase);	
 	}
 
-	function drawingTimeUp(data){
+	function drawStageTimeUp(data){
 		// TODO
 	}
 

@@ -7,8 +7,6 @@ function Player(socket){
 	var _fakeSubmitted = false;
 	var _guessSubmitted = false;
 
-	var _ui = UIController(playerHandlers);
-
 	// UIController -> Player
 	var playerHandlers = {
 		"create-player" : createPlayer,
@@ -16,6 +14,8 @@ function Player(socket){
 		"submit-fake" : submitFake,
 		"submit-guess" : submitGuess
 	};
+
+	var _ui = UIController(playerHandlers);
 
 	// Player Event Handlers (UIController -> Player)
 	function createPlayer(data){
@@ -67,8 +67,8 @@ function Player(socket){
 		_ui.handle("drawing-phrase", data);
 	});
 
-	_socket.on("drawing-time-up", function(data){
-		_ui.handle("drawing-time-up", data);
+	_socket.on("draw-stage-time-up", function(data){
+		_ui.handle("draw-stage-time-up", data);
 		submitDrawing();
 	});
 

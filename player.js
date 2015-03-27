@@ -42,7 +42,7 @@ exports.Player = function(gameId,playerSocket,username){
 		_score += points;
 	}
 
-	self.sendWord = function(phrase){
+	self.sendPhrase = function(phrase){
 		_socket.emit('drawing-phrase', { phrase : phrase });
 	}
 

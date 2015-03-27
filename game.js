@@ -81,6 +81,7 @@ exports.Game = function(gameId,gameSocket,rounds){
 		}
 		_currentPlayer = randomPlayer();
 		_currentImage = _currentPlayer.getDrawing();
+		_socket.emit('start-turn');
 		_socket.to(_gameId).emit('start-turn');
 		_socket.emit('show-drawing', { image : _currentImage });
 		_currentPlayer.waitForFakes();
@@ -189,8 +190,8 @@ exports.Game = function(gameId,gameSocket,rounds){
 		startGame();
 	});
 
-	_socket.on('drawing-time-finish', function(data){
-		_socket.to(_gameId).emit('drawing-time-up');
+	_socket.on('draw-stage-finish', function(data){
+		_socket.to(_gameId).emit('draw-stage-time-up');
 	});
 
 	_socket.on('all-drawings-submitted', function(data){
